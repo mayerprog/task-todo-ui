@@ -57,7 +57,7 @@ const TaskListComponent = ({
         ))}
         <View style={styles.sumIconStyle}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Ionicons name="add-circle" size={70} color="#1B57B8" />
+            <Ionicons name="add-circle" size={70} color="#7D3F70" />
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -189,7 +189,7 @@ const TaskListItem = ({
             </Text>
             <View style={styles.shadowedUnderline} />
 
-            <Text style={styles.text}>{dateTaskList}</Text>
+            <Text style={styles.text}>Some data</Text>
           </Animated.View>
         </PanGestureHandler>
       </Animated.View>
@@ -201,11 +201,10 @@ const styles = StyleSheet.create({
   task: {
     width: "100%",
     alignItems: "center",
-    // marginVertical: 5,
   },
   taskContainer: {
-    backgroundColor: "#4676C5",
-    borderColor: "#1B57B8",
+    backgroundColor: "#7D3F70",
+    borderColor: "#A94700",
     borderWidth: 1,
     borderRadius: 16,
     paddingVertical: 14,
@@ -213,13 +212,6 @@ const styles = StyleSheet.create({
     width: "90%",
     alignSelf: "center",
     alignItems: "stretch",
-    shadowColor: "#000000",
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.2,
-    shadowRadius: 3,
   },
   text: {
     color: "#FFFFFF",
@@ -229,7 +221,7 @@ const styles = StyleSheet.create({
   },
   shadowedUnderline: {
     borderWidth: 0.5,
-    borderColor: "#0447B3",
+    borderColor: "#A94700",
     marginTop: 12,
     marginBottom: 5,
     shadowColor: "#000000",

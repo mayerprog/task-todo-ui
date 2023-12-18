@@ -18,7 +18,6 @@ import {
   FontAwesome,
   Ionicons,
 } from "@expo/vector-icons";
-import { selectImage } from "../services/imagePickerHelper";
 import { useRef, useState } from "react";
 import {
   PanGestureHandler,

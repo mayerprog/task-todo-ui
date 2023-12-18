@@ -1,15 +1,15 @@
 import { Provider } from "react-redux";
-import AppNav from "./src/navigation/AppNav";
 import { store } from "./src/redux/store";
 import "react-native-gesture-handler";
-import * as Notifications from "expo-notifications";
-import { useEffect } from "react";
-import Constants from "expo-constants";
+import AppStack from "./src/navigation/AppStack";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   return (
     <Provider store={store}>
-      <AppNav />
+      <NavigationContainer>
+        <AppStack />
+      </NavigationContainer>
     </Provider>
   );
 }

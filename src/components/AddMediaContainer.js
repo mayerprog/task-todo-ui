@@ -16,7 +16,6 @@ import CustomButton from "./CustomButton";
 import { tasksAPI } from "../api/tasksAPI";
 import * as FileSystem from "expo-file-system";
 import PressableContainer from "./PressableContainer";
-import { selectImage } from "../services/imagePickerHelper";
 
 const { baseURL } = require("../../config");
 

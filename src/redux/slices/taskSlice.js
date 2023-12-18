@@ -59,6 +59,7 @@ export const taskSlice = createSlice({
     },
     setTasks: (state, action) => {
       state.tasks = action.payload;
+      console.log("tasks", state.tasks);
     },
     addTasks: (state, action) => {
       state.tasks = [...state.tasks, action.payload];

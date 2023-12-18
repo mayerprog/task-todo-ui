@@ -52,15 +52,7 @@ export const tasksAPI = {
       alert("Failed to create task. Check console for details.");
     }
   },
-  // async uploadImage(formData) {
-  //   try {
-  //     const response = await instance.post(`/uploadImage`, formData);
-  //     console.log("Image uploaded", response.data.image.data);
-  //     return response.data.image.name;
-  //   } catch (err) {
-  //     alert(err);
-  //   }
-  // },
+
   async getAll() {
     try {
       const response = await instance.get(`/getAll`);

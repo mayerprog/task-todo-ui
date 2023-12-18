@@ -21,34 +21,24 @@ import {
 import CustomButton from "../components/CustomButton";
 import ChooseTimeComponent from "../components/ChooseTimeComponent";
 import { tasksAPI } from "../api/tasksAPI";
-import { setTasks } from "../redux/slices/taskSlice";
 
 import { useEffect, useState } from "react";
-import TaskAttachments from "../components/TaskAttachments";
-import DatePicker from "../components/DatePicker";
-import { removeBirthDate } from "../redux/slices/authSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const NewTaskScreen = ({ setModalVisible }) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [linkData, setLinkData] = useState("");
-  const [linkName, setLinkName] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
+
   const [taskDate, setTaskDate] = useState("");
-  const [dateForDisplay, setDateForDisplay] = useState("");
 
   const links = useSelector((state) => state.task.links);
   const images = useSelector((state) => state.task.images);
-
-  const currentTime = new Date();
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(removeAllLinks());
-    dispatch(removeBirthDate());
     dispatch(removeAllImages());
   }, []);
 
@@ -140,24 +130,7 @@ const NewTaskScreen = ({ setModalVisible }) => {
             </View>
 
             <>
-              <Text style={styles.text}>When?</Text>
-
-              <DatePicker
-                valueDate={dateForDisplay}
-                dateAction={setTaskDate}
-                displayType="inline"
-                dateInputStyle={styles.dateInputStyle}
-                placeholderTextColor="white"
-                placeholder="Choose date"
-                iconColor="white"
-                mode="datetime"
-                cancelButtonColor="#DAD9D9"
-                maximumDate={null}
-                minimumDate={currentTime}
-                setDateForDisplay={setDateForDisplay}
-              />
               <ChooseTimeComponent
-                setSelectedDate={setSelectedDate}
                 dropDownDirection="BOTTOM"
                 placeholderValue="Repeat..."
                 setOpen={setOpen}
@@ -166,17 +139,6 @@ const NewTaskScreen = ({ setModalVisible }) => {
             </>
 
             <View style={styles.shadowedUnderline} />
-
-            <TaskAttachments
-              linkData={linkData}
-              linkName={linkName}
-              setLinkData={setLinkData}
-              setLinkName={setLinkName}
-              addLinks={addLinks}
-              removeLinks={removeLinks}
-              dispatch={dispatch}
-              links={links}
-            />
 
             <View
               style={{
@@ -199,7 +161,7 @@ const NewTaskScreen = ({ setModalVisible }) => {
                   label="Create"
                   buttonStyle={[
                     styles.buttonStyle,
-                    { backgroundColor: "#002594" },
+                    { backgroundColor: "#DB5C00" },
                   ]}
                   textButtonStyle={styles.textButtonStyle}
                   underlayColor="#5884CD"
@@ -225,7 +187,7 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flex: 1,
     opacity: 0.8,
-    backgroundColor: "#1B57B8",
+    backgroundColor: "#782666",
   },
   line: {
     flexDirection: "row",
@@ -277,7 +239,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     width: 140,
     height: 45,
-    backgroundColor: "#4676C5",
+    backgroundColor: "#A94700",
     paddingVertical: 13,
   },
   textButtonStyle: {
@@ -285,9 +247,9 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend-Regular",
   },
   shadowedUnderline: {
-    borderWidth: 1.3,
+    borderWidth: 1,
     alignSelf: "stretch",
-    borderColor: "#0447B3",
+    borderColor: "white",
     marginTop: 30,
     marginBottom: 15,
     shadowColor: "#000000",

@@ -8,47 +8,26 @@ import {
   View,
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { authAPI } from "../api/usersAPI";
-import { setIsAuth } from "../redux/slices/authSlice";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import listIcon from "../assets/images/list.png";
 
 const Header = () => {
   const dispatch = useDispatch();
-  async function logout() {
-    const logoutResult = await authAPI.logout();
-    dispatch(setIsAuth(logoutResult));
-  }
+
   return (
     <View>
       <View style={styles.header}>
-        <View style={{ flexDirection: "row", marginTop: -13 }}>
-          <Ionicons
-            name="checkmark-done"
-            size={38}
-            color="black"
-            style={styles.doneImg}
-          />
-          <Text style={styles.headerText}>
-            My
-            {"\n"}
-            Routine
-          </Text>
+        <View
+          style={{
+            flexDirection: "row",
+          }}
+        >
+          <Image source={listIcon} style={styles.doneImg} />
         </View>
-
-        <View>
-          <TouchableOpacity onPress={logout} style={{ marginTop: -7 }}>
-            <MaterialIcons name="logout" size={35} color="black" />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontFamily: "Lexend-Regular",
-              fontSize: 10,
-              marginTop: 0,
-            }}
-          >
-            Log Out
-          </Text>
-        </View>
+        <Text style={styles.headerText}>
+          Tasks
+          {"\n"}
+          To Do
+        </Text>
       </View>
 
       <View style={styles.line}>
@@ -62,19 +41,17 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "flex-start",
-    justifyContent: "space-between",
-    paddingTop: 20,
-    paddingHorizontal: 25,
+    justifyContent: "space-around",
   },
   headerText: {
     fontSize: 15,
-    color: "#1B57B8",
+    color: "white",
     alignSelf: "center",
     fontFamily: "Poppins-Bold",
   },
   doneImg: {
-    height: 38,
-    width: 38,
+    height: 50,
+    width: 50,
     marginEnd: 10,
     marginVertical: 10,
   },
