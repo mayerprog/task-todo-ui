@@ -19,7 +19,6 @@ import {
 } from "../redux/slices/taskSlice";
 
 import CustomButton from "../components/CustomButton";
-import ChooseTimeComponent from "../components/ChooseTimeComponent";
 import { tasksAPI } from "../api/tasksAPI";
 
 import { useEffect, useState } from "react";
@@ -30,52 +29,14 @@ const NewTaskScreen = ({ setModalVisible }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
-  const [taskDate, setTaskDate] = useState("");
-
-  const links = useSelector((state) => state.task.links);
-  const images = useSelector((state) => state.task.images);
-
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(removeAllLinks());
-    dispatch(removeAllImages());
-  }, []);
-
-  const postImage = async () => {
-    const formData = new FormData();
-
-    images.forEach((image) => {
-      const fileName = image.split("/").pop();
-      const fileType = fileName.split(".").pop();
-      formData.append("image", {
-        name: fileName,
-        uri: image,
-        type: `image/${fileType}`,
-      });
-    });
-
-    return formData;
-  };
-
   async function createTask() {
-    const formData = await postImage();
-    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    console.log("formData", formData);
     if (title === "") alert("Please add title");
-    // else if (description === "") alert("Please add description");
-    else if (taskDate === "") alert("Please choose date");
+    else if (description === "") alert("Please add description");
     else {
       setLoading(true);
-      const newSavedTask = await tasksAPI.createTask(
-        title,
-        description,
-        taskDate,
-        timeZone,
-        links,
-        formData
-      );
+      const newSavedTask = await tasksAPI.createTask(title, description);
       dispatch(addTasks(newSavedTask));
       setModalVisible(false);
       setLoading(false);
@@ -129,14 +90,7 @@ const NewTaskScreen = ({ setModalVisible }) => {
               />
             </View>
 
-            <>
-              <ChooseTimeComponent
-                dropDownDirection="BOTTOM"
-                placeholderValue="Repeat..."
-                setOpen={setOpen}
-                open={open}
-              />
-            </>
+            <></>
 
             <View style={styles.shadowedUnderline} />
 

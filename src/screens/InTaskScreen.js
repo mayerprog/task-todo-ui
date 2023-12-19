@@ -1,102 +1,49 @@
 import {
   ActivityIndicator,
-  Alert,
-  Keyboard,
-  Linking,
-  Modal,
   Platform,
   ScrollView,
   StatusBar,
   StyleSheet,
-  Text,
   TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import {
-  addInTaskLinks,
-  addInTaskImages,
-  removeDeletedImages,
-} from "../redux/slices/taskSlice";
-import ChooseTimeComponent from "../components/ChooseTimeComponent";
+
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useState } from "react";
 import CustomButton from "../components/CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { editTask } from "../redux/slices/taskSlice";
 import { tasksAPI } from "../api/tasksAPI";
-import { AntDesign, Ionicons, MaterialIcons } from "@expo/vector-icons";
-import InTaskLinks from "../components/InTaskLinks";
-import InTaskImages from "../components/InTaskImages";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import DatePicker from "../components/DatePicker";
 
 const InTaskScreen = ({ route, navigation }) => {
   const { task } = route.params;
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [taskDate, setTaskDate] = useState("");
-  const [dateForDisplay, setDateForDisplay] = useState();
 
   const dispatch = useDispatch();
-  const links = useSelector((state) => state.task.links);
-  const images = useSelector((state) => state.task.images);
-  const deletedImages = useSelector((state) => state.task.deletedImages);
-
-  const [selectedDate, setSelectedDate] = useState(task.date);
 
   let updatedTask = {
     ...task,
-    links: [...task.links],
-    images: [...task.images],
-  };
-
-  const currentTime = new Date();
-  const dateInTask = new Date(task.specificDate).toLocaleString().slice(0, 17);
-
-  useEffect(() => {
-    dispatch(addInTaskLinks(task.links));
-    dispatch(addInTaskImages(task.images));
-    // console.log("images", images);
-    // console.log("links", links);
-  }, []);
-
-  const checkIfURLCanBeOpened = async (url) => {
-    try {
-      const canOpen = await Linking.canOpenURL(url);
-      if (canOpen) {
-        Linking.openURL(url);
-      } else {
-        alert(`The URL is invalid`);
-      }
-    } catch (error) {
-      console.error("Error checking if URL can be opened: ", error);
-    }
   };
 
   const updateTask = async () => {
     setButtonLoading(true);
     updatedTask.title = title;
     updatedTask.description = description;
-    updatedTask.links = links;
-    updatedTask.images = images;
-    updatedTask.notificationDate = selectedDate;
     console.log("updatedtask", updatedTask);
     dispatch(editTask(updatedTask));
-    await tasksAPI.updateTask(task._id, updatedTask, deletedImages);
-    dispatch(removeDeletedImages());
+    await tasksAPI.updateTask(task._id, updatedTask);
     navigation.goBack();
     setButtonLoading(false);
   };
 
   const [open, setOpen] = useState(false);
 
-  const handleOutsidePress = () => {
-    Keyboard.dismiss();
-    setOpen(false);
-  };
+  // const handleOutsidePress = () => {
+  //   Keyboard.dismiss();
+  //   setOpen(false);
+  // };
 
   return (
     // <TouchableWithoutFeedback onPress={handleOutsidePress}>
@@ -129,52 +76,8 @@ const InTaskScreen = ({ route, navigation }) => {
           />
         </View>
 
-        <View style={styles.contentContainer}>
-          <Text style={styles.labelText}>Links</Text>
-          <View style={styles.shadowedUnderline} />
-          <InTaskLinks
-            checkIfURLCanBeOpened={checkIfURLCanBeOpened}
-            dispatch={dispatch}
-            links={links}
-          />
-        </View>
-
-        <View style={styles.contentContainer}>
-          <Text style={styles.labelText}>Media</Text>
-          <View style={styles.shadowedUnderline} />
-          <GestureHandlerRootView style={{ flex: 1 }}>
-            <InTaskImages dispatch={dispatch} images={images} />
-          </GestureHandlerRootView>
-        </View>
-
         <View style={[styles.contentContainer, { zIndex: 1000 }]}>
-          <Text style={styles.labelText}>When?</Text>
-          <View style={styles.shadowedUnderline} />
-          <View>
-            <DatePicker
-              valueDate={dateForDisplay}
-              dateAction={setTaskDate}
-              displayType="inline"
-              dateInputStyle={styles.dateInputStyle}
-              placeholderTextColor="black"
-              placeholder={dateInTask}
-              iconColor="white"
-              mode="datetime"
-              cancelButtonColor="#DAD9D9"
-              maximumDate={null}
-              minimumDate={currentTime}
-              setDateForDisplay={setDateForDisplay}
-            />
-          </View>
-          <View style={{ marginTop: 15 }}>
-            <ChooseTimeComponent
-              setSelectedDate={setSelectedDate}
-              dropDownDirection="BOTTOM"
-              placeholderValue="Repeat..."
-              setOpen={setOpen}
-              open={open}
-            />
-          </View>
+          <View style={{ marginTop: 15 }}></View>
         </View>
 
         <View
