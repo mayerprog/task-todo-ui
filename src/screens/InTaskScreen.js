@@ -61,8 +61,15 @@ const InTaskScreen = ({ navigation, task, setEditTask }) => {
         />
 
         <View style={styles.shadowedUnderline} />
+        <Text style={styles.text}>Some data</Text>
 
-        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginTop: 15,
+          }}
+        >
           <TouchableOpacity onPress={updateTask}>
             <Text style={[styles.text, { fontFamily: "Poppins-Bold" }]}>
               Update
