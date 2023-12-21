@@ -44,12 +44,11 @@ export const tasksAPI = {
       alert(err);
     }
   },
-  async updateTask(id, updatedTask, deletedImages) {
-    console.log("deletedImagesAPI", deletedImages);
+  async updateTask(taskID, updatedTask) {
+    console.log("updatedTask", updatedTask);
     try {
-      const response = await instance.put(`/updateTask/${id}`, {
+      const response = await instance.put(`/updateTask/${taskID}`, {
         updatedTask: updatedTask,
-        imagesName: deletedImages,
       });
       return response.data;
     } catch (err) {

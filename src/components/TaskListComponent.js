@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Dimensions,
   TouchableWithoutFeedback,
+  Modal,
 } from "react-native";
 import {
   PanGestureHandler,
@@ -25,6 +26,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { tasksAPI } from "../api/tasksAPI";
+import InTaskScreen from "../screens/InTaskScreen";
 
 const TaskListComponent = ({
   tasks,
@@ -34,6 +36,7 @@ const TaskListComponent = ({
 }) => {
   const scrollRef = useRef(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
+
   return (
     <>
       <ScrollView
@@ -73,6 +76,7 @@ const TaskListItem = ({
   navigation,
 }) => {
   const [height, setHeight] = useState();
+  const [editTask, setEditTask] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -95,7 +99,8 @@ const TaskListItem = ({
   };
 
   const handleDoubleTap = () => {
-    navigation.navigate("InTask", { task: task });
+    // navigation.navigate("InTask", { task: task });
+    setEditTask(true);
   };
 
   const panGesture = useAnimatedGestureHandler({
@@ -153,47 +158,53 @@ const TaskListItem = ({
   });
 
   return (
-    <TapGestureHandler
-      onHandlerStateChange={({ nativeEvent }) => {
-        if (nativeEvent.state === State.ACTIVE) {
-          handleDoubleTap();
-        }
-      }}
-      numberOfTaps={2}
-    >
-      <Animated.View
-        style={[styles.task, rTaskContainerStyle]}
-        onLayout={({ nativeEvent }) => {
-          const { height } = nativeEvent.layout;
-          setHeight(height);
-        }}
-      >
-        <Animated.View style={[styles.iconContainer, rIconContainerStyle]}>
-          <FontAwesome5 name="trash-alt" size={40} color="red" />
-        </Animated.View>
-        <PanGestureHandler
-          onGestureEvent={panGesture}
-          simultaneousHandlers={simultaneousHandlers}
+    <View>
+      {!editTask ? (
+        <TapGestureHandler
+          onHandlerStateChange={({ nativeEvent }) => {
+            if (nativeEvent.state === State.ACTIVE) {
+              handleDoubleTap();
+            }
+          }}
+          numberOfTaps={2}
         >
-          <Animated.View style={[styles.taskContainer, rStyle]}>
-            <Text
-              style={[
-                styles.text,
-                { fontSize: 16, fontFamily: "Lexend-SemiBold" },
-              ]}
+          <Animated.View
+            style={[styles.task, rTaskContainerStyle]}
+            onLayout={({ nativeEvent }) => {
+              const { height } = nativeEvent.layout;
+              setHeight(height);
+            }}
+          >
+            <Animated.View style={[styles.iconContainer, rIconContainerStyle]}>
+              <FontAwesome5 name="trash-alt" size={40} color="red" />
+            </Animated.View>
+            <PanGestureHandler
+              onGestureEvent={panGesture}
+              simultaneousHandlers={simultaneousHandlers}
             >
-              {task.title}
-            </Text>
-            <Text style={[styles.text, { marginTop: 7 }]} numberOfLines={2}>
-              {task.description}
-            </Text>
-            <View style={styles.shadowedUnderline} />
+              <Animated.View style={[styles.taskContainer, rStyle]}>
+                <Text
+                  style={[
+                    styles.text,
+                    { fontSize: 16, fontFamily: "Lexend-SemiBold" },
+                  ]}
+                >
+                  {task.title}
+                </Text>
+                <Text style={[styles.text, { marginTop: 7 }]} numberOfLines={2}>
+                  {task.description}
+                </Text>
+                <View style={styles.shadowedUnderline} />
 
-            <Text style={styles.text}>Some data</Text>
+                <Text style={styles.text}>Some data</Text>
+              </Animated.View>
+            </PanGestureHandler>
           </Animated.View>
-        </PanGestureHandler>
-      </Animated.View>
-    </TapGestureHandler>
+        </TapGestureHandler>
+      ) : (
+        <InTaskScreen task={task} setEditTask={setEditTask} />
+      )}
+    </View>
   );
 };
 

@@ -23,6 +23,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.task.tasks);
 
@@ -50,6 +51,15 @@ const HomeScreen = ({ navigation }) => {
             navigation={navigation}
           />
         </GestureHandlerRootView>
+
+        <Modal
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+          animationType="slide"
+          presentationStyle="formSheet"
+        >
+          <NewTaskScreen setModalVisible={setModalVisible} />
+        </Modal>
 
         <Modal
           visible={modalVisible}

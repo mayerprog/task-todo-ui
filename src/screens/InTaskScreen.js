@@ -4,7 +4,9 @@ import {
   ScrollView,
   StatusBar,
   StyleSheet,
+  Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from "react-native";
 
@@ -15,8 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editTask } from "../redux/slices/taskSlice";
 import { tasksAPI } from "../api/tasksAPI";
 
-const InTaskScreen = ({ route, navigation }) => {
-  const { task } = route.params;
+const InTaskScreen = ({ navigation, task, setEditTask }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -34,113 +35,78 @@ const InTaskScreen = ({ route, navigation }) => {
     console.log("updatedtask", updatedTask);
     dispatch(editTask(updatedTask));
     await tasksAPI.updateTask(task._id, updatedTask);
-    navigation.goBack();
+    setEditTask(false);
     setButtonLoading(false);
   };
 
   const [open, setOpen] = useState(false);
 
-  // const handleOutsidePress = () => {
-  //   Keyboard.dismiss();
-  //   setOpen(false);
-  // };
-
   return (
-    // <TouchableWithoutFeedback onPress={handleOutsidePress}>
-    <SafeAreaView style={styles.container} edges={["top", "right", "left"]}>
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: 70,
-        }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <View>
-          <TextInput
-            style={[
-              styles.textStyle,
-              { fontFamily: "Roboto-Medium", fontSize: 24 },
-            ]}
-            placeholder="Title"
-            defaultValue={title}
-            onChangeText={(taskTitle) => setTitle(taskTitle)}
-          />
+    <View style={styles.task}>
+      <View style={styles.taskContainer}>
+        <TextInput
+          style={[styles.text, { fontSize: 16, fontFamily: "Lexend-SemiBold" }]}
+          placeholder="Title"
+          defaultValue={title}
+          onChangeText={(taskTitle) => setTitle(taskTitle)}
+        />
 
-          <TextInput
-            style={[styles.textStyle, { paddingHorizontal: 12 }]}
-            multiline={true}
-            maxLength={2000}
-            placeholder="Description"
-            defaultValue={description}
-            onChangeText={(taskDescription) => setDescription(taskDescription)}
-          />
-        </View>
+        <TextInput
+          style={[styles.text, { marginTop: 7 }]}
+          multiline={true}
+          maxLength={2000}
+          placeholder="Description"
+          defaultValue={description}
+          onChangeText={(taskDescription) => setDescription(taskDescription)}
+        />
 
-        <View style={[styles.contentContainer, { zIndex: 1000 }]}>
-          <View style={{ marginTop: 15 }}></View>
-        </View>
+        <View style={styles.shadowedUnderline} />
 
-        <View
-          style={{
-            flexGrow: 1,
-            flexDirection: "row",
-            justifyContent: "space-around",
-            paddingTop: 25,
-            paddingBottom: 10,
-          }}
-        >
-          <CustomButton
-            label="Cancel"
-            buttonStyle={styles.buttonStyle}
-            textButtonStyle={styles.textButtonStyle}
-            action={() => navigation.goBack()}
-            underlayColor="#5884CD"
-          />
-          {buttonLoading ? (
-            <ActivityIndicator size="large" color="#0000ff" style={{}} />
-          ) : (
-            <CustomButton
-              label="Save"
-              buttonStyle={[styles.buttonStyle, { backgroundColor: "#D1E0F9" }]}
-              textButtonStyle={[styles.textButtonStyle, { color: "#5884CD" }]}
-              underlayColor="#002594"
-              action={updateTask}
-            />
-          )}
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <TouchableOpacity onPress={updateTask}>
+            <Text style={[styles.text, { fontFamily: "Poppins-Bold" }]}>
+              Update
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setEditTask(false)}>
+            <Text style={[styles.text, { fontFamily: "Poppins-Bold" }]}>
+              Cancel
+            </Text>
+          </TouchableOpacity>
         </View>
-      </ScrollView>
-    </SafeAreaView>
-    // </TouchableWithoutFeedback>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  task: {
+    width: "100%",
+    alignItems: "center",
   },
-  infoContainer: {
-    flex: 1,
-    justifyContent: "flex-start",
-  },
-  textStyle: {
-    fontFamily: "Roboto-Regular",
-    fontSize: 16,
-    paddingVertical: 13,
+  taskContainer: {
+    backgroundColor: "#7D3F70",
+    borderColor: "#A94700",
+    borderWidth: 1,
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 30,
+    width: "90%",
     alignSelf: "center",
+    alignItems: "stretch",
+    margin: 5,
   },
-  contentContainer: {
-    flex: 1,
-    justifyContent: "flex-start",
-    marginVertical: 10,
-    minHeight: 160,
-    maxHeight: "auto",
+  text: {
+    color: "#FFFFFF",
+    fontFamily: "Lexend-Regular",
+    fontSize: 14,
+    margin: 3,
   },
   shadowedUnderline: {
-    marginHorizontal: 15,
     borderWidth: 0.5,
-    borderColor: "black",
+    borderColor: "#A94700",
+    marginTop: 12,
+    marginBottom: 5,
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -149,37 +115,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.4,
     shadowRadius: 4,
     backgroundColor: "#0447B3",
-  },
-  labelText: {
-    alignSelf: "center",
-    color: "#6A6A6A",
-    marginBottom: 5,
-  },
-  nothingAddedText: {
-    alignSelf: "center",
-    marginTop: 10,
-  },
-  buttonStyle: {
-    width: 140,
-    height: 45,
-    backgroundColor: "#4676C5",
-    paddingVertical: 13,
-  },
-  textButtonStyle: {
-    fontSize: 16,
-    fontFamily: "Lexend-Regular",
-  },
-  textInputStyle: {
-    borderRadius: 30,
-    width: 200,
-  },
-  dateInputStyle: {
-    alignSelf: "center",
-    marginTop: 25,
-    marginBottom: 15,
-    width: 380,
-    borderColor: "black",
-    backgroundColor: "white",
   },
 });
 
