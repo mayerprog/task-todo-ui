@@ -45,7 +45,7 @@ const InTaskScreen = ({ navigation, task, setEditTask }) => {
     <View style={styles.task}>
       <View style={styles.taskContainer}>
         <TextInput
-          style={[styles.text, { fontSize: 16, fontFamily: "Lexend-SemiBold" }]}
+          style={[styles.text, { fontSize: 17, fontFamily: "Lexend-SemiBold" }]}
           placeholder="Title"
           defaultValue={title}
           onChangeText={(taskTitle) => setTitle(taskTitle)}
@@ -67,16 +67,26 @@ const InTaskScreen = ({ navigation, task, setEditTask }) => {
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            marginTop: 15,
+            marginTop: 30,
           }}
         >
           <TouchableOpacity onPress={updateTask}>
-            <Text style={[styles.text, { fontFamily: "Poppins-Bold" }]}>
+            <Text
+              style={[
+                styles.text,
+                { fontFamily: "Poppins-Bold", fontSize: 15 },
+              ]}
+            >
               Update
             </Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setEditTask(false)}>
-            <Text style={[styles.text, { fontFamily: "Poppins-Bold" }]}>
+            <Text
+              style={[
+                styles.text,
+                { fontFamily: "Poppins-Bold", fontSize: 15 },
+              ]}
+            >
               Cancel
             </Text>
           </TouchableOpacity>
@@ -100,7 +110,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     width: "90%",
     alignSelf: "center",
-    alignItems: "stretch",
     margin: 5,
   },
   text: {

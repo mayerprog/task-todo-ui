@@ -21,9 +21,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { FontAwesome5 } from "@expo/vector-icons";
-
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { tasksAPI } from "../api/tasksAPI";
 import InTaskScreen from "../screens/InTaskScreen";
@@ -89,17 +87,12 @@ const TaskListItem = ({
   const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.3;
   const SCROLLING_THRESHOLD = SCREEN_WIDTH * 0.01;
 
-  const dateTaskList = new Date(task.specificDate)
-    .toLocaleString()
-    .slice(0, 17);
-
   const handleRemoveTask = async () => {
     await tasksAPI.deleteOne(task._id);
     dispatch(removeTasks(task._id));
   };
 
   const handleDoubleTap = () => {
-    // navigation.navigate("InTask", { task: task });
     setEditTask(true);
   };
 
@@ -127,6 +120,15 @@ const TaskListItem = ({
       } else {
         translateX.value = withTiming(0);
       }
+
+      // const shouldBeDone = translateX.value < -TRANSLATE_X_THRESHOLD;
+
+      // if (shouldBeDone) {
+      //   translateX.value = withTiming(-SCREEN_WIDTH * 0.3);
+      // } else {
+      //   translateX.value = withTiming(0);
+      // }
+
       if (
         translateX.value > -SCROLLING_THRESHOLD ||
         translateX.value < SCROLLING_THRESHOLD
@@ -146,6 +148,11 @@ const TaskListItem = ({
 
   const rIconContainerStyle = useAnimatedStyle(() => {
     const opacity = withTiming(translateX.value < -SCREEN_WIDTH * 0.1 ? 1 : 0);
+    return { opacity };
+  });
+
+  const doneIconContainerStyle = useAnimatedStyle(() => {
+    const opacity = withTiming(translateX.value < SCREEN_WIDTH * 0.1 ? 0 : 1);
     return { opacity };
   });
 
@@ -175,8 +182,23 @@ const TaskListItem = ({
               setHeight(height);
             }}
           >
-            <Animated.View style={[styles.iconContainer, rIconContainerStyle]}>
+            <Animated.View
+              style={[
+                styles.iconContainer,
+                rIconContainerStyle,
+                { right: "10%" },
+              ]}
+            >
               <FontAwesome5 name="trash-alt" size={40} color="red" />
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.iconContainer,
+                doneIconContainerStyle,
+                { left: "10%" },
+              ]}
+            >
+              <Ionicons name="checkmark-done-sharp" size={40} color="green" />
             </Animated.View>
             <PanGestureHandler
               onGestureEvent={panGesture}
@@ -186,7 +208,7 @@ const TaskListItem = ({
                 <Text
                   style={[
                     styles.text,
-                    { fontSize: 16, fontFamily: "Lexend-SemiBold" },
+                    { fontSize: 17, fontFamily: "Lexend-SemiBold" },
                   ]}
                 >
                   {task.title}
@@ -256,7 +278,6 @@ const styles = StyleSheet.create({
   iconContainer: {
     height: "100%",
     position: "absolute",
-    right: "10%",
     justifyContent: "center",
     alignItems: "center",
   },

@@ -55,7 +55,6 @@ export const taskSlice = createSlice({
       state.tasks = state.tasks.map((task) =>
         task._id === action.payload._id ? action.payload : task
       );
-      // console.log(state.tasks);
     },
     setTasks: (state, action) => {
       state.tasks = action.payload;
