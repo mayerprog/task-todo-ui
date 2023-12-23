@@ -23,11 +23,13 @@ import { tasksAPI } from "../api/tasksAPI";
 
 import { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Checkbox from "expo-checkbox";
 
 const NewTaskScreen = ({ setModalVisible }) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [isImportant, setIsImportant] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -36,21 +38,19 @@ const NewTaskScreen = ({ setModalVisible }) => {
     else if (description === "") alert("Please add description");
     else {
       setLoading(true);
-      const newSavedTask = await tasksAPI.createTask(title, description, false);
+      const newSavedTask = await tasksAPI.createTask(
+        title,
+        description,
+        isImportant,
+        false
+      );
       dispatch(addTasks(newSavedTask));
       setModalVisible(false);
       setLoading(false);
     }
   }
-  const [open, setOpen] = useState(false);
-
-  const handleOutsidePress = () => {
-    Keyboard.dismiss();
-    setOpen(false);
-  };
 
   return (
-    // <TouchableWithoutFeedback onPress={handleOutsidePress}>
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
         style={styles.scrollContainer}
@@ -90,7 +90,23 @@ const NewTaskScreen = ({ setModalVisible }) => {
               />
             </View>
 
-            <></>
+            <View
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "flex-start",
+                margin: 10,
+              }}
+            >
+              <Checkbox
+                style={{ margin: 8 }}
+                value={isImportant}
+                onValueChange={setIsImportant}
+                color={isImportant ? "#A94700" : undefined}
+                hitSlop={15}
+              />
+              <Text style={styles.text}>Important</Text>
+            </View>
 
             <View style={styles.shadowedUnderline} />
 
@@ -127,7 +143,6 @@ const NewTaskScreen = ({ setModalVisible }) => {
         </View>
       </ScrollView>
     </SafeAreaView>
-    // </TouchableWithoutFeedback>
   );
 };
 
