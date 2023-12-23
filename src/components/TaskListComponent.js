@@ -19,7 +19,11 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import {
+  MaterialIcons,
+  Ionicons,
+  MaterialCommunityIcons,
+} from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { tasksAPI } from "../api/tasksAPI";
 import { editTask } from "../redux/slices/taskSlice";
@@ -127,7 +131,7 @@ const TaskListItem = ({
         });
       } else if (translateX.value > SCREEN_WIDTH * 0.3) {
         taskPannedRight.value = true;
-        translateX.value = withTiming(SCREEN_WIDTH * 0.3); // or any other value you want it to rest at
+        translateX.value = withTiming(SCREEN_WIDTH * 0.3);
         translateX.value = withTiming(0, undefined, (isFinished) => {
           if (isFinished) {
             runOnJS(handleIsDoneTask)();
@@ -148,7 +152,6 @@ const TaskListItem = ({
   });
 
   const rStyle = useAnimatedStyle(() => {
-    // Background color changes to green if panned right beyond 30% of screen width and stays green
     const backgroundColor = task.isDone ? "#296C30" : "#7D3F70";
 
     return {
@@ -158,12 +161,12 @@ const TaskListItem = ({
   });
 
   const rIconContainerStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(translateX.value < -SCREEN_WIDTH * 0.1 ? 1 : 0);
+    const opacity = withTiming(translateX.value < -SCREEN_WIDTH * 0.25 ? 1 : 0);
     return { opacity };
   });
 
   const doneIconContainerStyle = useAnimatedStyle(() => {
-    const opacity = withTiming(translateX.value < SCREEN_WIDTH * 0.1 ? 0 : 1);
+    const opacity = withTiming(translateX.value < SCREEN_WIDTH * 0.3 ? 0 : 1);
     return { opacity };
   });
 
@@ -200,7 +203,11 @@ const TaskListItem = ({
                 { right: "10%" },
               ]}
             >
-              <FontAwesome5 name="trash-alt" size={40} color="red" />
+              <MaterialCommunityIcons
+                name="delete-empty"
+                size={60}
+                color="red"
+              />
             </Animated.View>
             <Animated.View
               style={[
@@ -209,7 +216,15 @@ const TaskListItem = ({
                 { left: "10%" },
               ]}
             >
-              <Ionicons name="checkmark-done-sharp" size={45} color="green" />
+              {!task.isDone ? (
+                <Ionicons
+                  name="md-checkmark-done-sharp"
+                  size={60}
+                  color="green"
+                />
+              ) : (
+                <MaterialIcons name="remove-done" size={60} color="red" />
+              )}
             </Animated.View>
             <PanGestureHandler
               onGestureEvent={panGesture}
