@@ -71,21 +71,19 @@ const TaskListItem = ({
   simultaneousHandlers,
   setScrollEnabled,
   removeTasks,
-  navigation,
 }) => {
   const [height, setHeight] = useState();
   const [editTask, setEditTask] = useState(false);
-  const taskPannedRight = useSharedValue(false);
 
   const dispatch = useDispatch();
 
   const translateX = useSharedValue(0);
+  const taskPannedRight = useSharedValue(false);
   const itemHeight = useSharedValue(height);
   const marginVertical = useSharedValue(5);
   const opacity = useSharedValue(1);
 
   const { width: SCREEN_WIDTH } = Dimensions.get("window");
-  const TRANSLATE_X_THRESHOLD = -SCREEN_WIDTH * 0.3;
   const SCROLLING_THRESHOLD = SCREEN_WIDTH * 0.01;
 
   const handleRemoveTask = async () => {
@@ -108,28 +106,25 @@ const TaskListItem = ({
       }
     },
     onEnd: () => {
-      const shouldBeDismissed = translateX.value < TRANSLATE_X_THRESHOLD;
-      if (shouldBeDismissed) {
+      if (translateX.value < -SCREEN_WIDTH * 0.3) {
+        // Task is swiped left, should be dismissed
         translateX.value = withTiming(-SCREEN_WIDTH);
         itemHeight.value = withTiming(0);
         marginVertical.value = withTiming(0);
         opacity.value = withTiming(0, undefined, (isFinished) => {
-          if (isFinished && removeTasks) {
+          if (isFinished) {
             runOnJS(handleRemoveTask)();
           }
         });
-      } else {
-        translateX.value = withTiming(0);
-      }
-
-      const isPannedRight = translateX.value > SCREEN_WIDTH * 0.3;
-      if (isPannedRight) {
+      } else if (translateX.value > SCREEN_WIDTH * 0.3) {
+        // Task is swiped right, should turn green and stay
         taskPannedRight.value = true;
-        translateX.value = withTiming(SCREEN_WIDTH * 0.3);
+        translateX.value = withTiming(SCREEN_WIDTH * 0.3); // or any other value you want it to rest at
         translateX.value = withTiming(0);
       } else {
+        // Task is not swiped far enough, should reset
+        translateX.value = withTiming(0);
         taskPannedRight.value = false;
-        translateX.value = withTiming(0); // Snap back to original position
       }
 
       if (
