@@ -12,11 +12,12 @@ const instance = axios.create({
 });
 
 export const tasksAPI = {
-  async createTask(title, description) {
+  async createTask(title, description, isDone) {
     try {
       const response = await instance.post(`/createTask`, {
         title,
         description,
+        isDone,
       });
       return response.data;
     } catch (err) {

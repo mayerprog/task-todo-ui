@@ -75,6 +75,7 @@ const TaskListItem = ({
 }) => {
   const [height, setHeight] = useState();
   const [editTask, setEditTask] = useState(false);
+  const taskPannedRight = useSharedValue(false);
 
   const dispatch = useDispatch();
 
@@ -121,13 +122,15 @@ const TaskListItem = ({
         translateX.value = withTiming(0);
       }
 
-      // const shouldBeDone = translateX.value < -TRANSLATE_X_THRESHOLD;
-
-      // if (shouldBeDone) {
-      //   translateX.value = withTiming(-SCREEN_WIDTH * 0.3);
-      // } else {
-      //   translateX.value = withTiming(0);
-      // }
+      const isPannedRight = translateX.value > SCREEN_WIDTH * 0.3;
+      if (isPannedRight) {
+        taskPannedRight.value = true;
+        translateX.value = withTiming(SCREEN_WIDTH * 0.3);
+        translateX.value = withTiming(0);
+      } else {
+        taskPannedRight.value = false;
+        translateX.value = withTiming(0); // Snap back to original position
+      }
 
       if (
         translateX.value > -SCROLLING_THRESHOLD ||
@@ -138,13 +141,22 @@ const TaskListItem = ({
     },
   });
 
-  const rStyle = useAnimatedStyle(() => ({
-    transform: [
-      {
-        translateX: translateX.value,
-      },
-    ],
-  }));
+  // const rStyle = useAnimatedStyle(() => ({
+  //   transform: [
+  //     {
+  //       translateX: translateX.value,
+  //     },
+  //   ],
+  // }));
+  const rStyle = useAnimatedStyle(() => {
+    // Background color changes to green if panned right beyond 30% of screen width and stays green
+    const backgroundColor = taskPannedRight.value ? "green" : "#7D3F70";
+
+    return {
+      backgroundColor,
+      transform: [{ translateX: translateX.value }],
+    };
+  });
 
   const rIconContainerStyle = useAnimatedStyle(() => {
     const opacity = withTiming(translateX.value < -SCREEN_WIDTH * 0.1 ? 1 : 0);
@@ -198,7 +210,7 @@ const TaskListItem = ({
                 { left: "10%" },
               ]}
             >
-              <Ionicons name="checkmark-done-sharp" size={40} color="green" />
+              <Ionicons name="checkmark-done-sharp" size={45} color="green" />
             </Animated.View>
             <PanGestureHandler
               onGestureEvent={panGesture}

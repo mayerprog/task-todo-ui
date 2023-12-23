@@ -36,7 +36,7 @@ const NewTaskScreen = ({ setModalVisible }) => {
     else if (description === "") alert("Please add description");
     else {
       setLoading(true);
-      const newSavedTask = await tasksAPI.createTask(title, description);
+      const newSavedTask = await tasksAPI.createTask(title, description, false);
       dispatch(addTasks(newSavedTask));
       setModalVisible(false);
       setLoading(false);
