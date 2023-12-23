@@ -5,8 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  TouchableWithoutFeedback,
-  Modal,
 } from "react-native";
 import {
   PanGestureHandler,
@@ -24,6 +22,7 @@ import Animated, {
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { tasksAPI } from "../api/tasksAPI";
+import { editTask } from "../redux/slices/taskSlice";
 import InTaskScreen from "../screens/InTaskScreen";
 
 const TaskListComponent = ({
@@ -73,9 +72,14 @@ const TaskListItem = ({
   removeTasks,
 }) => {
   const [height, setHeight] = useState();
-  const [editTask, setEditTask] = useState(false);
+  const [changeTask, setChangeTask] = useState(false);
+  const [isTaskDone, setIsTaskDone] = useState(false);
 
   const dispatch = useDispatch();
+
+  let updatedTask = {
+    ...task,
+  };
 
   const translateX = useSharedValue(0);
   const taskPannedRight = useSharedValue(false);
@@ -90,9 +94,15 @@ const TaskListItem = ({
     await tasksAPI.deleteOne(task._id);
     dispatch(removeTasks(task._id));
   };
+  const handleIsDoneTask = async () => {
+    setIsTaskDone(!isTaskDone);
+    updatedTask.isDone = isTaskDone;
+    await tasksAPI.updateTask(task._id, updatedTask);
+    dispatch(editTask(updatedTask));
+  };
 
   const handleDoubleTap = () => {
-    setEditTask(true);
+    setChangeTask(true);
   };
 
   const panGesture = useAnimatedGestureHandler({
@@ -107,7 +117,6 @@ const TaskListItem = ({
     },
     onEnd: () => {
       if (translateX.value < -SCREEN_WIDTH * 0.3) {
-        // Task is swiped left, should be dismissed
         translateX.value = withTiming(-SCREEN_WIDTH);
         itemHeight.value = withTiming(0);
         marginVertical.value = withTiming(0);
@@ -117,12 +126,14 @@ const TaskListItem = ({
           }
         });
       } else if (translateX.value > SCREEN_WIDTH * 0.3) {
-        // Task is swiped right, should turn green and stay
         taskPannedRight.value = true;
         translateX.value = withTiming(SCREEN_WIDTH * 0.3); // or any other value you want it to rest at
-        translateX.value = withTiming(0);
+        translateX.value = withTiming(0, undefined, (isFinished) => {
+          if (isFinished) {
+            runOnJS(handleIsDoneTask)();
+          }
+        });
       } else {
-        // Task is not swiped far enough, should reset
         translateX.value = withTiming(0);
         taskPannedRight.value = false;
       }
@@ -136,16 +147,9 @@ const TaskListItem = ({
     },
   });
 
-  // const rStyle = useAnimatedStyle(() => ({
-  //   transform: [
-  //     {
-  //       translateX: translateX.value,
-  //     },
-  //   ],
-  // }));
   const rStyle = useAnimatedStyle(() => {
     // Background color changes to green if panned right beyond 30% of screen width and stays green
-    const backgroundColor = taskPannedRight.value ? "green" : "#7D3F70";
+    const backgroundColor = task.isDone ? "#296C30" : "#7D3F70";
 
     return {
       backgroundColor,
@@ -173,7 +177,7 @@ const TaskListItem = ({
 
   return (
     <View>
-      {!editTask ? (
+      {!changeTask ? (
         <TapGestureHandler
           onHandlerStateChange={({ nativeEvent }) => {
             if (nativeEvent.state === State.ACTIVE) {
@@ -231,7 +235,7 @@ const TaskListItem = ({
           </Animated.View>
         </TapGestureHandler>
       ) : (
-        <InTaskScreen task={task} setEditTask={setEditTask} />
+        <InTaskScreen task={task} setChangeTask={setChangeTask} />
       )}
     </View>
   );

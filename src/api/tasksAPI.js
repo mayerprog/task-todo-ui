@@ -28,7 +28,6 @@ export const tasksAPI = {
       alert("Failed to create task. Check console for details.");
     }
   },
-
   async getAll() {
     try {
       const response = await instance.get(`/getAll`);

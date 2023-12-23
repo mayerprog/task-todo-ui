@@ -17,7 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editTask } from "../redux/slices/taskSlice";
 import { tasksAPI } from "../api/tasksAPI";
 
-const InTaskScreen = ({ navigation, task, setEditTask }) => {
+const InTaskScreen = ({ navigation, task, setChangeTask }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -35,7 +35,7 @@ const InTaskScreen = ({ navigation, task, setEditTask }) => {
     console.log("updatedtask", updatedTask);
     dispatch(editTask(updatedTask));
     await tasksAPI.updateTask(task._id, updatedTask);
-    setEditTask(false);
+    setChangeTask(false);
     setButtonLoading(false);
   };
 
@@ -80,7 +80,7 @@ const InTaskScreen = ({ navigation, task, setEditTask }) => {
               Update
             </Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setEditTask(false)}>
+          <TouchableOpacity onPress={() => setChangeTask(false)}>
             <Text
               style={[
                 styles.text,
