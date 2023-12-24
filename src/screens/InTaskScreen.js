@@ -21,6 +21,11 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [descriptionHeight, setDescriptionHeight] = useState(200);
+
+  const handleContentSizeChange = (event) => {
+    setDescriptionHeight(event.nativeEvent.contentSize.height);
+  };
 
   const dispatch = useDispatch();
 
@@ -50,12 +55,13 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
         />
 
         <TextInput
-          style={[styles.text, { marginTop: 7 }]}
+          style={[styles.text, { minHeight: Math.max(30, descriptionHeight) }]}
           multiline={true}
           maxLength={2000}
           placeholder="Description"
           defaultValue={description}
           onChangeText={(taskDescription) => setDescription(taskDescription)}
+          onContentSizeChange={handleContentSizeChange}
         />
 
         <View style={styles.shadowedUnderline} />
@@ -65,7 +71,7 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            marginTop: 30,
+            marginTop: 15,
           }}
         >
           <TouchableOpacity onPress={updateTask}>
@@ -115,6 +121,7 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend-Regular",
     fontSize: 14,
     margin: 3,
+    textAlignVertical: "top",
   },
   shadowedUnderline: {
     borderWidth: 0.5,

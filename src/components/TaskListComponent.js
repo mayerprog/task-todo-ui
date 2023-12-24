@@ -271,7 +271,11 @@ const TaskListItem = ({
                 {!task.isDone && (
                   <>
                     <View style={styles.shadowedUnderline} />
-                    <Text style={styles.text}>Some data</Text>
+                    {task.isImportant ? (
+                      <Text style={styles.text}>Important</Text>
+                    ) : (
+                      <Text style={styles.text}>All</Text>
+                    )}
                   </>
                 )}
               </Animated.View>
