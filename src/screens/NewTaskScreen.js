@@ -30,6 +30,16 @@ const NewTaskScreen = ({ setModalVisible }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isImportant, setIsImportant] = useState(false);
+  const maxLines = 10;
+
+  const handleTextChange = (text) => {
+    const lines = text.split("\n");
+    if (lines.length <= maxLines) {
+      setDescription(text);
+    } else {
+      setDescription(lines.slice(0, maxLines).join("\n"));
+    }
+  };
 
   const dispatch = useDispatch();
 
@@ -85,7 +95,7 @@ const NewTaskScreen = ({ setModalVisible }) => {
                 placeholderTextColor="#ccc"
                 value={description}
                 onChangeText={(taskDescription) =>
-                  setDescription(taskDescription)
+                  handleTextChange(taskDescription)
                 }
               />
             </View>

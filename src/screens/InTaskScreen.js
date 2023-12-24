@@ -22,8 +22,13 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [descriptionHeight, setDescriptionHeight] = useState(200);
+  const [descriptionHeight, setDescriptionHeight] = useState(0);
   const [isImportant, setIsImportant] = useState(task.isImportant);
+
+  useEffect(() => {
+    const initialHeight = Math.min(150 + description.length * 0.5, 200);
+    setDescriptionHeight(initialHeight);
+  }, [description]);
 
   const handleContentSizeChange = (event) => {
     setDescriptionHeight(event.nativeEvent.contentSize.height);
@@ -58,13 +63,19 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
         />
 
         <TextInput
-          style={[styles.text, { minHeight: Math.max(30, descriptionHeight) }]}
+          style={[
+            styles.text,
+            {
+              height: Math.max(30, descriptionHeight),
+            },
+          ]}
           multiline={true}
           maxLength={2000}
           placeholder="Description"
           defaultValue={description}
           onChangeText={(taskDescription) => setDescription(taskDescription)}
-          onContentSizeChange={(e) => handleContentSizeChange(e)}
+          onContentSizeChange={handleContentSizeChange}
+          scrollEnabled={true}
         />
 
         <View style={styles.shadowedUnderline} />
@@ -139,7 +150,6 @@ const styles = StyleSheet.create({
     fontFamily: "Lexend-Regular",
     fontSize: 14,
     margin: 3,
-    textAlignVertical: "top",
   },
   shadowedUnderline: {
     borderWidth: 0.5,
