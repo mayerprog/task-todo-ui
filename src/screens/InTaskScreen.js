@@ -1,9 +1,5 @@
 import {
-  ActivityIndicator,
   Alert,
-  Platform,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TextInput,
@@ -11,10 +7,8 @@ import {
   View,
 } from "react-native";
 
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useEffect, useState } from "react";
-import CustomButton from "../components/CustomButton";
-import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { editTask } from "../redux/slices/taskSlice";
 import { tasksAPI } from "../api/tasksAPI";
 import Checkbox from "expo-checkbox";
@@ -23,17 +17,7 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
-  const [descriptionHeight, setDescriptionHeight] = useState(0);
   const [isImportant, setIsImportant] = useState(task.isImportant);
-
-  useEffect(() => {
-    const initialHeight = Math.min(150 + description.length * 0.5, 200);
-    setDescriptionHeight(initialHeight);
-  }, [description]);
-
-  const handleContentSizeChange = (event) => {
-    setDescriptionHeight(event.nativeEvent.contentSize.height);
-  };
 
   const dispatch = useDispatch();
 
@@ -74,7 +58,7 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
           style={[
             styles.text,
             {
-              height: Math.max(30, descriptionHeight),
+              height: 200,
             },
           ]}
           multiline={true}
@@ -82,7 +66,6 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
           placeholder="Description"
           defaultValue={description}
           onChangeText={(taskDescription) => setDescription(taskDescription)}
-          onContentSizeChange={handleContentSizeChange}
           scrollEnabled={true}
         />
 

@@ -1,23 +1,14 @@
 import {
   ActivityIndicator,
   Alert,
-  Keyboard,
-  Modal,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
-  TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  removeLinks,
-  addLinks,
-  addTasks,
-  removeAllLinks,
-  removeAllImages,
-} from "../redux/slices/taskSlice";
+import { useDispatch } from "react-redux";
+import { addTasks } from "../redux/slices/taskSlice";
 
 import CustomButton from "../components/CustomButton";
 import { tasksAPI } from "../api/tasksAPI";
@@ -31,16 +22,6 @@ const NewTaskScreen = ({ setModalVisible }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isImportant, setIsImportant] = useState(false);
-  const maxLines = 10;
-
-  const handleTextChange = (text) => {
-    const lines = text.split("\n");
-    if (lines.length <= maxLines) {
-      setDescription(text);
-    } else {
-      setDescription(lines.slice(0, maxLines).join("\n"));
-    }
-  };
 
   const dispatch = useDispatch();
 
@@ -100,7 +81,7 @@ const NewTaskScreen = ({ setModalVisible }) => {
                 placeholderTextColor="#ccc"
                 value={description}
                 onChangeText={(taskDescription) =>
-                  handleTextChange(taskDescription)
+                  setDescription(taskDescription)
                 }
               />
             </View>

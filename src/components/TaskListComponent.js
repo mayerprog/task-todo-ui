@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import {
   PanGestureHandler,
@@ -52,43 +54,51 @@ const TaskListComponent = ({
         style={{ margin: 15 }}
         tintColor="white"
       />
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-        ref={scrollRef}
-        scrollEnabled={scrollEnabled}
-        automaticallyAdjustKeyboardInsets={true}
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
       >
-        {selectedFilterIndex === 1
-          ? importantTasks.map((task) => (
-              <TaskListItem
-                task={task}
-                key={task._id}
-                simultaneousHandlers={scrollRef}
-                setScrollEnabled={setScrollEnabled}
-                removeTasks={removeTasks}
-                navigation={navigation}
-              />
-            ))
-          : tasks.map((task) => (
-              <TaskListItem
-                task={task}
-                key={task._id}
-                simultaneousHandlers={scrollRef}
-                setScrollEnabled={setScrollEnabled}
-                removeTasks={removeTasks}
-                navigation={navigation}
-              />
-            ))}
-        <View style={styles.sumIconStyle}>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Ionicons name="add-circle" size={70} color="#7D3F70" />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            flexDirection: "column",
+            justifyContent: "space-between",
+            paddingBottom: 20,
+          }}
+          ref={scrollRef}
+          scrollEnabled={scrollEnabled}
+          // automaticallyAdjustKeyboardInsets={true}
+          keyboardShouldPersistTaps="handled"
+          removeClippedSubviews={true}
+        >
+          {selectedFilterIndex === 1
+            ? importantTasks.map((task) => (
+                <TaskListItem
+                  task={task}
+                  key={task._id}
+                  simultaneousHandlers={scrollRef}
+                  setScrollEnabled={setScrollEnabled}
+                  removeTasks={removeTasks}
+                  navigation={navigation}
+                />
+              ))
+            : tasks.map((task) => (
+                <TaskListItem
+                  task={task}
+                  key={task._id}
+                  simultaneousHandlers={scrollRef}
+                  setScrollEnabled={setScrollEnabled}
+                  removeTasks={removeTasks}
+                  navigation={navigation}
+                />
+              ))}
+          <View style={styles.sumIconStyle}>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <Ionicons name="add-circle" size={70} color="#7D3F70" />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 };
