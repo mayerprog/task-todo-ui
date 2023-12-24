@@ -263,12 +263,15 @@ const TaskListItem = ({
                 >
                   {task.title}
                 </Text>
-                <Text style={[styles.text, { marginTop: 7 }]} numberOfLines={2}>
+                <Text style={[styles.text, { marginTop: 5 }]} numberOfLines={2}>
                   {task.description}
                 </Text>
-                <View style={styles.shadowedUnderline} />
-
-                <Text style={styles.text}>Some data</Text>
+                {!task.isDone && (
+                  <>
+                    <View style={styles.shadowedUnderline} />
+                    <Text style={styles.text}>Some data</Text>
+                  </>
+                )}
               </Animated.View>
             </PanGestureHandler>
           </Animated.View>
@@ -288,11 +291,12 @@ const styles = StyleSheet.create({
   taskContainer: {
     borderWidth: 1,
     borderRadius: 12,
-    paddingVertical: 14,
     paddingHorizontal: 30,
     width: "90%",
     alignSelf: "center",
     alignItems: "stretch",
+    borderColor: "black",
+    paddingVertical: 14,
   },
   text: {
     color: "#FFFFFF",

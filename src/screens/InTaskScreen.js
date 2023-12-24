@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   taskContainer: {
     backgroundColor: "#7D3F70",
-    borderColor: "#A94700",
+    borderColor: "black",
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 14,
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
   },
   shadowedUnderline: {
     borderWidth: 0.5,
-    borderColor: "#A94700",
+    borderColor: "#C0C0C0",
     marginTop: 12,
     marginBottom: 5,
     shadowColor: "#000000",
