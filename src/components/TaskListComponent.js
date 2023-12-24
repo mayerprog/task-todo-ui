@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -28,6 +28,7 @@ import { useDispatch } from "react-redux";
 import { tasksAPI } from "../api/tasksAPI";
 import { editTask } from "../redux/slices/taskSlice";
 import InTaskScreen from "../screens/InTaskScreen";
+import SegmentedControlIOS from "@react-native-segmented-control/segmented-control";
 
 const TaskListComponent = ({
   tasks,
@@ -37,9 +38,20 @@ const TaskListComponent = ({
 }) => {
   const scrollRef = useRef(null);
   const [scrollEnabled, setScrollEnabled] = useState(true);
+  const [selectedFilterIndex, setSelectedFilterIndex] = useState(0);
+  const importantTasks = tasks.filter((task) => task.isImportant);
 
   return (
     <>
+      <SegmentedControlIOS
+        values={["All", "Important"]}
+        selectedIndex={selectedFilterIndex}
+        onChange={(event) => {
+          setSelectedFilterIndex(event.nativeEvent.selectedSegmentIndex);
+        }}
+        style={{ margin: 15 }}
+        tintColor="white"
+      />
       <ScrollView
         contentContainerStyle={{
           flexGrow: 1,
@@ -49,16 +61,27 @@ const TaskListComponent = ({
         ref={scrollRef}
         scrollEnabled={scrollEnabled}
       >
-        {tasks.map((task, index) => (
-          <TaskListItem
-            task={task}
-            key={task._id}
-            simultaneousHandlers={scrollRef}
-            setScrollEnabled={setScrollEnabled}
-            removeTasks={removeTasks}
-            navigation={navigation}
-          />
-        ))}
+        {selectedFilterIndex === 1
+          ? importantTasks.map((task) => (
+              <TaskListItem
+                task={task}
+                key={task._id}
+                simultaneousHandlers={scrollRef}
+                setScrollEnabled={setScrollEnabled}
+                removeTasks={removeTasks}
+                navigation={navigation}
+              />
+            ))
+          : tasks.map((task) => (
+              <TaskListItem
+                task={task}
+                key={task._id}
+                simultaneousHandlers={scrollRef}
+                setScrollEnabled={setScrollEnabled}
+                removeTasks={removeTasks}
+                navigation={navigation}
+              />
+            ))}
         <View style={styles.sumIconStyle}>
           <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Ionicons name="add-circle" size={70} color="#7D3F70" />
@@ -77,7 +100,7 @@ const TaskListItem = ({
 }) => {
   const [height, setHeight] = useState();
   const [changeTask, setChangeTask] = useState(false);
-  const [isTaskDone, setIsTaskDone] = useState(false);
+  const [isTaskDone, setIsTaskDone] = useState(task.isDone);
 
   const dispatch = useDispatch();
 
@@ -99,8 +122,9 @@ const TaskListItem = ({
     dispatch(removeTasks(task._id));
   };
   const handleIsDoneTask = async () => {
-    setIsTaskDone(!isTaskDone);
-    updatedTask.isDone = isTaskDone;
+    const updatedIsTaskDone = !isTaskDone;
+    setIsTaskDone(updatedIsTaskDone);
+    updatedTask.isDone = updatedIsTaskDone;
     await tasksAPI.updateTask(task._id, updatedTask);
     dispatch(editTask(updatedTask));
   };
