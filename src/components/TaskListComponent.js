@@ -60,6 +60,7 @@ const TaskListComponent = ({
         }}
         ref={scrollRef}
         scrollEnabled={scrollEnabled}
+        automaticallyAdjustKeyboardInsets={true}
       >
         {selectedFilterIndex === 1
           ? importantTasks.map((task) => (
@@ -178,7 +179,6 @@ const TaskListItem = ({
 
   const rStyle = useAnimatedStyle(() => {
     const backgroundColor = task.isDone && !changeTask ? "#296C30" : "#7D3F70";
-    // const backgroundColor = "#7D3F70";
 
     return {
       backgroundColor,
