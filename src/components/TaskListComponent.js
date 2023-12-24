@@ -124,6 +124,7 @@ const TaskListItem = ({
   const handleIsDoneTask = async () => {
     const updatedIsTaskDone = !isTaskDone;
     setIsTaskDone(updatedIsTaskDone);
+    console.log("updatedIsTaskDone", updatedIsTaskDone);
     updatedTask.isDone = updatedIsTaskDone;
     await tasksAPI.updateTask(task._id, updatedTask);
     dispatch(editTask(updatedTask));
@@ -176,7 +177,8 @@ const TaskListItem = ({
   });
 
   const rStyle = useAnimatedStyle(() => {
-    const backgroundColor = task.isDone ? "#296C30" : "#7D3F70";
+    const backgroundColor = task.isDone && !changeTask ? "#296C30" : "#7D3F70";
+    // const backgroundColor = "#7D3F70";
 
     return {
       backgroundColor,

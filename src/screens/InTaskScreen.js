@@ -39,8 +39,6 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
     setButtonLoading(false);
   };
 
-  const [open, setOpen] = useState(false);
-
   return (
     <View style={styles.task}>
       <View style={styles.taskContainer}>
