@@ -130,7 +130,7 @@ const TaskListItem = ({
   };
 
   const handleDoubleTap = () => {
-    setChangeTask(true);
+    if (!task.isDone) setChangeTask(true);
   };
 
   const panGesture = useAnimatedGestureHandler({
