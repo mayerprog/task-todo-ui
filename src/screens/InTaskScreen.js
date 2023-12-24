@@ -16,12 +16,14 @@ import CustomButton from "../components/CustomButton";
 import { useDispatch, useSelector } from "react-redux";
 import { editTask } from "../redux/slices/taskSlice";
 import { tasksAPI } from "../api/tasksAPI";
+import Checkbox from "expo-checkbox";
 
 const InTaskScreen = ({ navigation, task, setChangeTask }) => {
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description);
   const [buttonLoading, setButtonLoading] = useState(false);
   const [descriptionHeight, setDescriptionHeight] = useState(200);
+  const [isImportant, setIsImportant] = useState(task.isImportant);
 
   const handleContentSizeChange = (event) => {
     setDescriptionHeight(event.nativeEvent.contentSize.height);
@@ -37,6 +39,7 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
     setButtonLoading(true);
     updatedTask.title = title;
     updatedTask.description = description;
+    updatedTask.isImportant = isImportant;
     console.log("updatedtask", updatedTask);
     dispatch(editTask(updatedTask));
     await tasksAPI.updateTask(task._id, updatedTask);
@@ -61,11 +64,26 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
           placeholder="Description"
           defaultValue={description}
           onChangeText={(taskDescription) => setDescription(taskDescription)}
-          onContentSizeChange={handleContentSizeChange}
+          onContentSizeChange={(e) => handleContentSizeChange(e)}
         />
 
         <View style={styles.shadowedUnderline} />
-        <Text style={styles.text}>Some data</Text>
+        <View
+          style={{
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Checkbox
+            style={{ margin: 8 }}
+            value={isImportant}
+            onValueChange={setIsImportant}
+            color={isImportant ? "#A94700" : undefined}
+            hitSlop={15}
+          />
+          <Text style={styles.text}>Important</Text>
+        </View>
 
         <View
           style={{
