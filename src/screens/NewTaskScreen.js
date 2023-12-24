@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Keyboard,
   Modal,
   ScrollView,
@@ -44,9 +45,13 @@ const NewTaskScreen = ({ setModalVisible }) => {
   const dispatch = useDispatch();
 
   async function createTask() {
-    if (title === "") alert("Please add title");
-    else if (description === "") alert("Please add description");
-    else {
+    if (title.trim().length === 0) {
+      Alert.alert("Please add title");
+      return;
+    } else if (description.trim().length === 0) {
+      Alert.alert("Please add description");
+      return;
+    } else {
       setLoading(true);
       const newSavedTask = await tasksAPI.createTask(
         title,

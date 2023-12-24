@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Platform,
   ScrollView,
   StatusBar,
@@ -41,6 +42,13 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
   };
 
   const updateTask = async () => {
+    if (title.trim().length === 0) {
+      Alert.alert("Please add title");
+      return;
+    } else if (description.trim().length === 0) {
+      Alert.alert("Please add description");
+      return;
+    }
     setButtonLoading(true);
     updatedTask.title = title;
     updatedTask.description = description;
