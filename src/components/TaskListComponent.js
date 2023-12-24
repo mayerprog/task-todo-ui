@@ -286,8 +286,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   taskContainer: {
-    backgroundColor: "#7D3F70",
-    borderColor: "#A94700",
     borderWidth: 1,
     borderRadius: 12,
     paddingVertical: 14,
@@ -304,9 +302,9 @@ const styles = StyleSheet.create({
   },
   shadowedUnderline: {
     borderWidth: 0.5,
-    borderColor: "#A94700",
     marginTop: 12,
     marginBottom: 5,
+    borderColor: "#C0C0C0",
     shadowColor: "#000000",
     shadowOffset: {
       width: 0,
@@ -322,7 +320,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: 20,
-    marginTop: 5,
+    marginTop: 25,
     height: "30%",
   },
   iconContainer: {
