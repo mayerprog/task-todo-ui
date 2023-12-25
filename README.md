@@ -30,6 +30,10 @@ Then:
 
 You can find my [server code here](https://github.com/mayerprog/task-todo-api)
 
+### **IMPORTANT:**
+
+- The server hasn't been published for external access, so make sure you run the server locally after installing all dependencies and running the server with the command `nodemon index.js`. In .env file insert a relevant database URL.
+
 ## Contacts
 
 <p>Mayra Tulegenova</p>
