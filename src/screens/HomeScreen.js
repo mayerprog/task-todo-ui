@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Keyboard,
   Modal,
   Platform,
@@ -23,6 +24,7 @@ import {
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 const HomeScreen = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
+  const [tasksLoading, setTasksLoading] = useState(false);
 
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.task.tasks);
@@ -30,9 +32,10 @@ const HomeScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       try {
+        setTasksLoading(true);
         const getAll = await tasksAPI.getAll();
-        console.log(getAll);
         dispatch(setTasks(getAll));
+        setTasksLoading(false);
       } catch (err) {
         console.log(err);
       }
@@ -43,14 +46,29 @@ const HomeScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Header />
       <View style={styles.tasksArea}>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <TaskListComponent
-            tasks={tasks}
-            setModalVisible={setModalVisible}
-            removeTasks={removeTasks}
-            navigation={navigation}
-          />
-        </GestureHandlerRootView>
+        {!tasksLoading ? (
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <TaskListComponent
+              tasks={tasks}
+              setModalVisible={setModalVisible}
+              removeTasks={removeTasks}
+              navigation={navigation}
+            />
+          </GestureHandlerRootView>
+        ) : (
+          <View
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                backgroundColor: "rgba(0,0,0,0,4)",
+                alignItems: "center",
+                justifyContent: "center",
+              },
+            ]}
+          >
+            <ActivityIndicator color="#fff" animating size="large" />
+          </View>
+        )}
 
         <Modal
           visible={modalVisible}

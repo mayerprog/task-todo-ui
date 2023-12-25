@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import {
   PanGestureHandler,
@@ -111,6 +112,7 @@ const TaskListItem = ({
   const [height, setHeight] = useState();
   const [changeTask, setChangeTask] = useState(false);
   const [isTaskDone, setIsTaskDone] = useState(task.isDone);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -132,12 +134,13 @@ const TaskListItem = ({
     dispatch(removeTasks(task._id));
   };
   const handleIsDoneTask = async () => {
+    setLoading(true);
     const updatedIsTaskDone = !isTaskDone;
     setIsTaskDone(updatedIsTaskDone);
-    console.log("updatedIsTaskDone", updatedIsTaskDone);
     updatedTask.isDone = updatedIsTaskDone;
     await tasksAPI.updateTask(task._id, updatedTask);
     dispatch(editTask(updatedTask));
+    setLoading(false);
   };
 
   const handleDoubleTap = () => {
@@ -265,29 +268,46 @@ const TaskListItem = ({
               onGestureEvent={panGesture}
               simultaneousHandlers={simultaneousHandlers}
             >
-              <Animated.View style={[styles.taskContainer, rStyle]}>
-                <Text
-                  style={[
-                    styles.text,
-                    { fontSize: 17, fontFamily: "Lexend-SemiBold" },
-                  ]}
-                >
-                  {task.title}
-                </Text>
-                <Text style={[styles.text, { marginTop: 5 }]} numberOfLines={2}>
-                  {task.description}
-                </Text>
-                {!task.isDone && (
-                  <>
-                    <View style={styles.shadowedUnderline} />
-                    {task.isImportant ? (
-                      <Text style={styles.text}>Important</Text>
-                    ) : (
-                      <Text style={styles.text}>All</Text>
-                    )}
-                  </>
-                )}
-              </Animated.View>
+              {loading ? (
+                <Animated.View style={[styles.taskContainer, rStyle]}>
+                  <ActivityIndicator
+                    size="large"
+                    color="#fff"
+                    style={{
+                      alignSelf: "center",
+                      alignItems: "stretch",
+                      paddingVertical: 14,
+                    }}
+                  />
+                </Animated.View>
+              ) : (
+                <Animated.View style={[styles.taskContainer, rStyle]}>
+                  <Text
+                    style={[
+                      styles.text,
+                      { fontSize: 17, fontFamily: "Lexend-SemiBold" },
+                    ]}
+                  >
+                    {task.title}
+                  </Text>
+                  <Text
+                    style={[styles.text, { marginTop: 5 }]}
+                    numberOfLines={2}
+                  >
+                    {task.description}
+                  </Text>
+                  {!task.isDone && (
+                    <>
+                      <View style={styles.shadowedUnderline} />
+                      {task.isImportant ? (
+                        <Text style={styles.text}>Important</Text>
+                      ) : (
+                        <Text style={styles.text}>All</Text>
+                      )}
+                    </>
+                  )}
+                </Animated.View>
+              )}
             </PanGestureHandler>
           </Animated.View>
         </TapGestureHandler>

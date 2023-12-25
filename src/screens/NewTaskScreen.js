@@ -13,7 +13,7 @@ import { addTasks } from "../redux/slices/taskSlice";
 import CustomButton from "../components/CustomButton";
 import { tasksAPI } from "../api/tasksAPI";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 

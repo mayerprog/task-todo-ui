@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Alert,
   StyleSheet,
   Text,
@@ -94,16 +95,21 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
             marginTop: 15,
           }}
         >
-          <TouchableOpacity onPress={updateTask}>
-            <Text
-              style={[
-                styles.text,
-                { fontFamily: "Poppins-Bold", fontSize: 15 },
-              ]}
-            >
-              Update
-            </Text>
-          </TouchableOpacity>
+          {buttonLoading ? (
+            <ActivityIndicator size="large" color="#fff" style={{}} />
+          ) : (
+            <TouchableOpacity onPress={updateTask}>
+              <Text
+                style={[
+                  styles.text,
+                  { fontFamily: "Poppins-Bold", fontSize: 15 },
+                ]}
+              >
+                Update
+              </Text>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity onPress={() => setChangeTask(false)}>
             <Text
               style={[

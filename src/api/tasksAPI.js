@@ -6,9 +6,6 @@ const path = "/tasks";
 const instance = axios.create({
   baseURL: baseURL + path,
   withCredentials: true,
-  // headers: {
-  //   Accept: "application/json",
-  // },
 });
 
 export const tasksAPI = {
