@@ -10,7 +10,7 @@ To run this web app you need (if not installed yet):
 
 Then:
 
-- Clone the repository with `git clone https://github.com/mayerprog/tasks-todo-ui`
+- Clone the repository with `git clone https://github.com/mayerprog/task-todo-ui`
 - Install dependencies `yarn install`
 - Run `yarn start` to run the project on Expo Go app
 
@@ -28,7 +28,7 @@ Then:
 
 ## API
 
-You can find my [server code here](https://github.com/mayerprog/tasks-todo-api)
+You can find my [server code here](https://github.com/mayerprog/task-todo-api)
 
 ## Contacts
 
