@@ -1,4 +1,4 @@
-<h1 align='center'>Tasks Todo App</h1>
+<h1 align='center'>Tasks Todo UI</h1>
 
 # Get Started
 
