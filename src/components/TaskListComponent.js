@@ -7,6 +7,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Platform,
+  SafeAreaView,
 } from "react-native";
 import {
   PanGestureHandler,
@@ -44,7 +45,7 @@ const TaskListComponent = ({
   const importantTasks = tasks.filter((task) => task.isImportant);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1 }}>
       <SegmentedControlIOS
         values={["All", "Important"]}
         selectedIndex={selectedFilterIndex}
@@ -56,18 +57,16 @@ const TaskListComponent = ({
       />
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
       >
         <ScrollView
           contentContainerStyle={{
             flexGrow: 1,
             flexDirection: "column",
             justifyContent: "space-between",
-            paddingBottom: 20,
+            paddingBottom: 40,
           }}
           ref={scrollRef}
           scrollEnabled={scrollEnabled}
-          // automaticallyAdjustKeyboardInsets={true}
           keyboardShouldPersistTaps="handled"
           removeClippedSubviews={true}
         >
@@ -99,7 +98,7 @@ const TaskListComponent = ({
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </>
+    </SafeAreaView>
   );
 };
 
