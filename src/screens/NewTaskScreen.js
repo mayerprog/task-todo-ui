@@ -121,7 +121,11 @@ const NewTaskScreen = ({ setModalVisible }) => {
                 underlayColor="#5884CD"
               />
               {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" style={{}} />
+                <ActivityIndicator
+                  size="large"
+                  color="#fff"
+                  style={{ alignSelf: "center" }}
+                />
               ) : (
                 <CustomButton
                   label="Create"
