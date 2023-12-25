@@ -43,7 +43,6 @@ export const tasksAPI = {
     }
   },
   async updateTask(taskID, updatedTask) {
-    console.log("updatedTask", updatedTask);
     try {
       const response = await instance.put(`/updateTask/${taskID}`, {
         updatedTask: updatedTask,

@@ -38,7 +38,6 @@ const InTaskScreen = ({ navigation, task, setChangeTask }) => {
     updatedTask.title = title;
     updatedTask.description = description;
     updatedTask.isImportant = isImportant;
-    console.log("updatedtask", updatedTask);
     dispatch(editTask(updatedTask));
     await tasksAPI.updateTask(task._id, updatedTask);
     setChangeTask(false);
